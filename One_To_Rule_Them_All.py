@@ -83,7 +83,7 @@ class PendulumPINN(nn.Module):
 
     @staticmethod
     def train_model(t_data, y_data, T=2.0, g=9.8, length=1.0, n_phys_points=200, 
-                    n_epochs=5000, lr=1e-3, early_stop_patience=500, early_stop_min_delta=1e-6):
+                    n_epochs=5000, lr=1e-3, early_stop_patience=2000, early_stop_min_delta=1e-6):
         t_interior = torch.linspace(0, T, n_phys_points).reshape(-1, 1)
         model = PendulumPINN(hidden_dim=20)
         optimizer = optim.Adam(model.parameters(), lr=lr)
@@ -232,7 +232,7 @@ class FreeFallPINN(nn.Module):
 
     @staticmethod
     def train_model(t_data, y_data, T=2.0, g=9.8, n_phys_points=50, 
-                    n_epochs=5000, lr=1e-3, early_stop_patience=500, early_stop_min_delta=1e-6):
+                    n_epochs=5000, lr=1e-3, early_stop_patience=2000, early_stop_min_delta=1e-6):
         t_interior = torch.linspace(0, T, n_phys_points).reshape(-1, 1)
         model = FreeFallPINN(hidden_dim=20)
         optimizer = optim.Adam(model.parameters(), lr=lr)
@@ -377,7 +377,7 @@ class ProjectilePINN(nn.Module):
 
     @staticmethod
     def train_model(t_data, x_data, y_data, T=2.0, g=9.8, n_phys_points=50, 
-                    n_epochs=5000, lr=1e-3, early_stop_patience=500, early_stop_min_delta=1e-6):
+                    n_epochs=5000, lr=1e-3, early_stop_patience=2000, early_stop_min_delta=1e-6):
         t_interior = torch.linspace(0, T, n_phys_points).reshape(-1, 1)
         model = ProjectilePINN(hidden_dim=20)
         optimizer = optim.Adam(model.parameters(), lr=lr)
@@ -528,4 +528,4 @@ def run_pin_framework(base_directory, file_name="3D_centers.pkl", phenomenon="pe
         print("Unknown phenomenon. Choose from: pendulum, freefall, projectile.")
 
 if __name__ == "__main__":
-    run_pin_framework("cogvideo_x_1-5_projectile_glm-4_i2v_prompt", file_name="3D_centers.pkl", phenomenon="projectile")
+    run_pin_framework("holonomic_pendulum", file_name="3D_centers.pkl", phenomenon="pendulum")
