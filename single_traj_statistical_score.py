@@ -8,22 +8,19 @@ import torch.optim as optim
 import matplotlib.pyplot as plt
 from scipy.signal import medfilt
 
-def preprocess_directories(base_directory):
-    """
-    (No longer used when working with a single file.)
-    """
-    subdirs = [d for d in os.listdir(base_directory) if os.path.isdir(os.path.join(base_directory, d))]
-    subdirs_sorted = sorted(subdirs)
-    for i, subdir in enumerate(subdirs_sorted):
-        old_path = os.path.join(base_directory, subdir)
-        new_name = f"video_{i}"
-        new_path = os.path.join(base_directory, new_name)
-        if old_path != new_path:
-            try:
-                os.rename(old_path, new_path)
-                print(f"Renamed '{old_path}' to '{new_path}'")
-            except Exception as e:
-                print(f"Error renaming {old_path} to {new_path}: {e}")
+# def preprocess_directories(base_directory):
+#     subdirs = [d for d in os.listdir(base_directory) if os.path.isdir(os.path.join(base_directory, d))]
+#     subdirs_sorted = sorted(subdirs)
+#     for i, subdir in enumerate(subdirs_sorted):
+#         old_path = os.path.join(base_directory, subdir)
+#         new_name = f"video_{i}"
+#         new_path = os.path.join(base_directory, new_name)
+#         if old_path != new_path:
+#             try:
+#                 os.rename(old_path, new_path)
+#                 print(f"Renamed '{old_path}' to '{new_path}'")
+#             except Exception as e:
+#                 print(f"Error renaming {old_path} to {new_path}: {e}")
 
 def apply_filter(t_data, x_data, y_data=None, kernel_size=25):
     """
@@ -511,14 +508,12 @@ def run_pin_framework(pkl_file, phenomenon="pendulum"):
         pkl_file (str): The full path to the pickle file containing the trajectory.
         phenomenon (str): Physical phenomenon ("pendulum", "freefall", or "projectile").
     """
-    # Save results in the same folder where the pkl file is located.
     output_dir = os.path.dirname(pkl_file)
     
     phenomenon = phenomenon.lower()
     if phenomenon == "pendulum":
         print("[Framework] Running Pendulum PINN.")
         trajectories = PendulumPINN.load_trajectories(pkl_file)
-        # Center the trajectory data.
         trajectories = [(t, x - torch.mean(x)) for t, x in trajectories]
         PendulumPINN.evaluate(trajectories, output_dir)
     elif phenomenon == "freefall":
@@ -534,5 +529,4 @@ def run_pin_framework(pkl_file, phenomenon="pendulum"):
 
 
 if __name__ == "__main__":
-    # Example usage: provide the path to a single pickle file.
     run_pin_framework("holonomic_pendulum_single_frame_seed_5470_1/3D_centers.pkl", phenomenon="pendulum")
